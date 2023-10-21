@@ -24,6 +24,13 @@ class UserMemStore: UserStore {
         }
     }
 
+    override fun delete(user: UserModel) {
+        var foundUserModel: UserModel? = users.find { u -> u.id == user.id }
+        if (foundUserModel != null) {
+            users.remove(user)
+        }
+    }
+
     fun logAll() {
         users.forEach{ i("${it}") }
     }

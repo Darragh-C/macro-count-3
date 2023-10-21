@@ -100,7 +100,7 @@ class UserProfileActivity : AppCompatActivity() {
             user.dob = day.toString() + "/" + month.toString() + "/" + year.toString()
 
             Timber.i("userProfile saved: $user.name")
-            app.users.update(user.copy())
+            app.users.create(user.copy())
             Timber.i("Total userProfiles: ")
             for (i in app.users.findAll().indices) {
                 Timber.i("userProfile[$i]:${app.users.findAll()[i]}")
