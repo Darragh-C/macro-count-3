@@ -1,0 +1,27 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">MacroCount</string>
+    <string name="button_addItem">Add MacroCount</string>
+    <string name="hint_macroCountTitle">MacroCount Title</string>
+    <string name="hint_macroCountDescription">MacroCount Description</string>
+    <string name="hint_macroCountCalories">Enter the number of calories</string>
+    <string name="hint_macroCountProtein">Protein Count</string>
+    <string name="hint_macroCountCarbs">Carbohydrate Count</string>
+    <string name="hint_macroCountFat">Fat Count</string>
+    <string name="hint_userName">User name</string>
+    <string name="snackbar_macroCountTitle">Please Enter a title</string>
+    <string name="snackbar_macroCountCalories">Please Enter a number for your calories</string>
+    <string name="snackbar_macroCountCarbs">Please Enter a number for your carbs</string>
+    <string name="snackbar_macroCountProtein">Please Enter a number for your protein</string>
+    <string name="snackbar_macroCountFat">Please Enter a number for your fat</string>
+    <string name="menu_addMacroCount">Add</string>
+    <string name="menu_cancelMacroCount">Cancel</string>
+    <string name="save_macroCount">Save</string>
+    <string name="button_deleteItem">Delete</string>
+    <string name="text_kg">kg</string>
+    <string name="text_dob">DOB</string>
+    <string name="text_gender">Gender</string>
+    <string name="text_genderM">Male</string>
+    <string name="text_genderF">Female</string>
+    <string name="title_userProfile">User profile</string>
+
+</resources>
