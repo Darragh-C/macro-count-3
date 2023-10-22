@@ -67,7 +67,7 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
         }
 
     override fun onMacroCountClick(macroCount: MacroCountModel) {
-        val launcherIntent = Intent(this, MacroCountEditActivity::class.java)
+        val launcherIntent = Intent(this, MacroCountActivity::class.java)
         launcherIntent.putExtra("macrocount_edit", macroCount)
         getClickResult.launch(launcherIntent)
     }
