@@ -1,7 +1,11 @@
 package org.wit.macrocount.activities
+
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import org.wit.macrocount.R
@@ -10,11 +14,14 @@ import org.wit.macrocount.helpers.DataValUtil
 import org.wit.macrocount.main.MainApp
 import org.wit.macrocount.models.MacroCountModel
 import timber.log.Timber.Forest.i
+import org.wit.macrocount.showImagePicker
+import com.squareup.picasso.Picasso
 
 class MacroCountActivity : AppCompatActivity() {
 
     lateinit var app : MainApp
     private lateinit var binding: ActivityMacrocountBinding
+    private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     var macroCount = MacroCountModel()
     var editMacro = false
 
@@ -42,6 +49,8 @@ class MacroCountActivity : AppCompatActivity() {
             binding.macroCountFat.setText(macroCount.fat)
             binding.btnAdd.setText(R.string.save_macroCount)
         }
+
+
 
         binding.btnAdd.setOnClickListener() {
             macroCount.title = binding.macroCountTitle.text.toString()
@@ -90,6 +99,14 @@ class MacroCountActivity : AppCompatActivity() {
                 }
             }
         }
+
+        registerImagePickerCallback()
+
+        binding.chooseImage.setOnClickListener {
+            showImagePicker(imageIntentLauncher)
+        }
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -104,5 +121,24 @@ class MacroCountActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun registerImagePickerCallback() {
+        imageIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when(result.resultCode){
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            i("Got Result ${result.data!!.data}")
+                            macroCount.image = result.data!!.data!!
+                            Picasso.get()
+                                .load(macroCount.image)
+                                .into(binding.macroCountImage)
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
     }
 }

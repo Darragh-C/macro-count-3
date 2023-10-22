@@ -1,5 +1,6 @@
 package org.wit.macrocount.models
 
+import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 @Parcelize
@@ -9,4 +10,5 @@ data class MacroCountModel(var id: Long = 0,
                            var calories: String = "",
                            var protein: String = "",
                            var carbs: String = "",
-                           var fat: String = "",) : Parcelable
+                           var fat: String = "",
+                           var image: Uri = Uri.EMPTY ) : Parcelable
