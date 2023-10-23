@@ -32,7 +32,12 @@
 
     <string name="button_addImage">Add Image</string>
     <string name="button_login">Log in</string>
+    <string name="button_signup">Sign up</string>
+
+    <string name="login_link">Log in</string>
+    <string name="signup_link">Sign up</string>
 
     <string name="select_macrocount_image">Select image</string>
+
 
 </resources>
