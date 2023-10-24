@@ -44,8 +44,11 @@ class UserJSONStore(private val context: Context): UserStore {
         return users
     }
 
+//    override fun getUser(user: UserModel): UserModel {
+//        var foundUser: UserModel? = users.find { m -> m.id == user.id }
+//    }
+
     override fun create(user: UserModel) {
-        user.id = generateRandomId()
         users.add(user)
         serialize()
     }
@@ -54,9 +57,11 @@ class UserJSONStore(private val context: Context): UserStore {
         var foundUser: UserModel? = users.find { m -> m.id == user.id }
         if (foundUser != null) {
             foundUser.name = user.name
-            foundUser.gender = foundUser.gender
-            foundUser.weight = foundUser.weight
-            foundUser.dob = foundUser.dob
+            foundUser.gender = user.gender
+            foundUser.weight = user.weight
+            foundUser.dob = user.dob
+            foundUser.email = user.email
+            foundUser.password = user.password
 
             serialize()
 

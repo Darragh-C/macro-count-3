@@ -17,6 +17,8 @@
     <string name="snackbar_macroCountCarbs">Please Enter a number for your carbs</string>
     <string name="snackbar_macroCountProtein">Please Enter a number for your protein</string>
     <string name="snackbar_macroCountFat">Please Enter a number for your fat</string>
+    <string name="snackbar_userEmail">Please enter an email address</string>
+    <string name="snackbar_userPassword">Please enter a password</string>
 
     <string name="menu_addMacroCount">Add</string>
     <string name="menu_cancelMacroCount">Cancel</string>

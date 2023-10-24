@@ -1,5 +1,6 @@
 package org.wit.macrocount.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -19,6 +20,7 @@ class UserProfileActivity : AppCompatActivity() {
     lateinit var app : MainApp
     private lateinit var binding: ActivityProfileBinding
     var user = UserModel()
+    var signup = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +32,12 @@ class UserProfileActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         app = application as MainApp
+
+        if (intent.hasExtra("user_signup")) {
+            signup = true
+            user = intent.extras?.getParcelable("user_signup")!!
+            i("user intent received at profile activity: ${user}")
+        }
 
         val radioGroup = findViewById<RadioGroup>(R.id.genderRadioGroup)
         var gender: String = ""
@@ -99,14 +107,21 @@ class UserProfileActivity : AppCompatActivity() {
             user.gender = gender
             user.dob = day.toString() + "/" + month.toString() + "/" + year.toString()
 
-            Timber.i("userProfile saved: $user.name")
-            app.users.create(user.copy())
+
+            Timber.i("userProfile saved: $user")
+            app.users.update(user.copy())
             Timber.i("Total userProfiles: ")
             for (i in app.users.findAll().indices) {
                 Timber.i("userProfile[$i]:${app.users.findAll()[i]}")
             }
-            setResult(RESULT_OK)
-            finish()
+            if (signup) {
+                val intent = Intent(this, MacroCountListActivity::class.java)
+                startActivity(intent)
+            } else {
+                setResult(RESULT_OK)
+                finish()
+            }
+
         }
 
     }
