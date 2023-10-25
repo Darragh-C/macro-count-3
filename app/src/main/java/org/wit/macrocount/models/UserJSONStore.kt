@@ -19,6 +19,8 @@ import java.util.Random
 
 const val USER_JSON_FILE = "users.json"
 
+var currentUser = UserModel()
+
 val userGsonBuilder: Gson = GsonBuilder().setPrettyPrinting()
     .registerTypeAdapter(Uri::class.java, UriParser())
     .create()
@@ -51,6 +53,16 @@ class UserJSONStore(private val context: Context): UserStore {
     override fun create(user: UserModel) {
         users.add(user)
         serialize()
+    }
+
+    override fun logIn(user: UserModel): Boolean {
+        var foundUser: UserModel? = users.find { u -> u.email == user.email}
+        if (foundUser != null && foundUser.email == user.email) {
+            currentUser = foundUser
+            return true
+        } else {
+            return false
+        }
     }
 
     override fun update(user: UserModel) {
