@@ -11,4 +11,5 @@ data class MacroCountModel(var id: Long = 0,
                            var protein: String = "",
                            var carbs: String = "",
                            var fat: String = "",
+                           var userId: Long = 0,
                            var image: Uri = Uri.EMPTY ) : Parcelable
