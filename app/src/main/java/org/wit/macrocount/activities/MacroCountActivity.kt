@@ -131,16 +131,13 @@ class MacroCountActivity : AppCompatActivity() {
                     i("macroCount saved: $macroCount.title")
                     app.macroCounts.update(macroCount.copy())
                 } else {
-                    i("macroCount added: $macroCount.title")
+
                     app.macroCounts.create(macroCount.copy())
+                    i("macroCount added: $macroCount")
                 }
 
-                i("Total MacroCounts: ")
-                for (i in app.macroCounts.findAll().indices) {
-                    i("MacroCount[$i]:${app.macroCounts.findAll()[i]}")
-                    setResult(RESULT_OK)
-                    finish()
-                }
+                setResult(RESULT_OK)
+                finish()
             }
         }
 

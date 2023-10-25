@@ -43,6 +43,13 @@ class MacroCountJSONStore(private val context: Context) : MacroCountStore {
         return macroCounts
     }
 
+    override fun findByCurrentUser(): List<MacroCountModel> {
+        var userMacros = macroCounts.filter { m -> m.userId == currentUser.id }
+        return userMacros
+    }
+
+
+
     override fun create(macroCount: MacroCountModel) {
         macroCount.id = generateRandomId()
         macroCount.userId = currentUser.id

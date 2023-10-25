@@ -31,7 +31,9 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = MacroCountAdapter(app.macroCounts.findAll(), this)
+        binding.recyclerView.adapter = MacroCountAdapter(app.macroCounts.findByCurrentUser(), this)
+        var currentUserMacros = app.macroCounts.findByCurrentUser()
+        Timber.i("findByCurrentUser() at onCreate: $currentUserMacros")
 
     }
 
@@ -45,6 +47,8 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
             R.id.item_add -> {
                 val launcherIntent = Intent(this, MacroCountActivity::class.java)
                 getResult.launch(launcherIntent)
+                var currentUserMacros = app.macroCounts.findByCurrentUser()
+                Timber.i("findByCurrentUser() at on item add: $currentUserMacros")
             }
         }
         when (item.itemId) {
@@ -62,7 +66,7 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
                 (binding.recyclerView.adapter)?.
-                notifyItemRangeChanged(0,app.macroCounts.findAll().size)
+                notifyItemRangeChanged(0,app.macroCounts.findByCurrentUser().size)
             }
         }
 
@@ -76,14 +80,7 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
         Timber.i("deleting macroCount: $macroCount.title")
         val position = app.macroCounts.index(macroCount)
         app.macroCounts.delete(macroCount)
-
-
         binding.recyclerView.adapter?.notifyItemRemoved(position)
-
-        Timber.i("Total MacroCounts: ")
-        for (i in app.macroCounts.findAll().indices) {
-            Timber.i("MacroCount[$i]:${app.macroCounts.findAll()[i]}")
-        }
     }
 
     private val getClickResult =
@@ -92,7 +89,7 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
                 (binding.recyclerView.adapter)?.
-                notifyItemRangeChanged(0,app.macroCounts.findAll().size)
+                notifyItemRangeChanged(0,app.macroCounts.findByCurrentUser().size)
             }
         }
 }
