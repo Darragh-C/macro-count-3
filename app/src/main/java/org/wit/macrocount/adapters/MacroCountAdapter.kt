@@ -29,6 +29,11 @@ class MacroCountAdapter constructor(private var macroCounts: List<MacroCountMode
 
     override fun getItemCount(): Int = macroCounts.size
 
+    fun updateData(newData: List<MacroCountModel>) {
+        macroCounts = newData
+        notifyDataSetChanged()
+    }
+
     class MainHolder(private val binding : CardMacrocountBinding) :
         RecyclerView.ViewHolder(binding.root) {
 

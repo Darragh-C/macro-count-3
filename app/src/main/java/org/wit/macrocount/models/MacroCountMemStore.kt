@@ -14,7 +14,7 @@ class MacroCountMemStore: MacroCountStore {
         return macroCounts
     }
     override fun findByCurrentUser(): List<MacroCountModel> {
-        TODO("Not yet implemented")
+        return macroCounts.filter { m -> m.userId == currentUser.id }
     }
 
     override fun create(macroCount: MacroCountModel) {

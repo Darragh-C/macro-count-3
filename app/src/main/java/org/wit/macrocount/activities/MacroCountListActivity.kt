@@ -17,8 +17,10 @@ import org.wit.macrocount.models.MacroCountModel
 import timber.log.Timber
 
 class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
-    lateinit var app: MainApp
+
+    private lateinit var app: MainApp
     private lateinit var binding: ActivityMacrocountListBinding
+    private lateinit var adapter: MacroCountAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,10 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = MacroCountAdapter(app.macroCounts.findByCurrentUser(), this)
+
+        adapter = MacroCountAdapter(app.macroCounts.findByCurrentUser(), this)
+        binding.recyclerView.adapter = adapter
+
         var currentUserMacros = app.macroCounts.findByCurrentUser()
         Timber.i("findByCurrentUser() at onCreate: $currentUserMacros")
 
@@ -61,12 +66,13 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
     }
 
     private val getResult =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                (binding.recyclerView.adapter)?.
-                notifyItemRangeChanged(0,app.macroCounts.findByCurrentUser().size)
+
+                adapter.updateData(app.macroCounts.findByCurrentUser())
+
+                adapter.notifyDataSetChanged()
+
             }
         }
 
@@ -84,14 +90,11 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
     }
 
     private val getClickResult =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                (binding.recyclerView.adapter)?.
-                notifyItemRangeChanged(0,app.macroCounts.findByCurrentUser().size)
+                adapter.updateData(app.macroCounts.findByCurrentUser())
+
+                adapter.notifyDataSetChanged()
             }
         }
 }
-
-

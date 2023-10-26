@@ -6,4 +6,5 @@ interface UserStore {
     fun update(user: UserModel)
     fun delete(user: UserModel)
     fun logIn(user: UserModel): Boolean
+    fun signUp(user: UserModel)
 }

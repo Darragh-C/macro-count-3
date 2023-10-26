@@ -12,9 +12,14 @@ class UserMemStore: UserStore {
         users.add(user)
     }
 
+    override fun signUp(user: UserModel) {
+        this.create(user)
+        logIn(user)
+    }
+
     override fun logIn(user: UserModel): Boolean {
         var foundUser: UserModel? = users.find { u -> u.email == user.email}
-        if (foundUser != null && foundUser.email == user.email) {
+        if (foundUser != null && foundUser.password == user.password) {
             currentUser = foundUser
             return true
         } else {

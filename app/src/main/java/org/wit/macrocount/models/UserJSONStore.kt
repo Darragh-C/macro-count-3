@@ -65,6 +65,11 @@ class UserJSONStore(private val context: Context): UserStore {
         }
     }
 
+    override fun signUp(user: UserModel) {
+        this.create(user)
+        logIn(user)
+    }
+
     override fun update(user: UserModel) {
         var foundUser: UserModel? = users.find { m -> m.id == user.id }
         if (foundUser != null) {

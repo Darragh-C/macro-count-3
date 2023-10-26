@@ -131,7 +131,6 @@ class MacroCountActivity : AppCompatActivity() {
                     i("macroCount saved: $macroCount.title")
                     app.macroCounts.update(macroCount.copy())
                 } else {
-
                     app.macroCounts.create(macroCount.copy())
                     i("macroCount added: $macroCount")
                 }

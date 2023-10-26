@@ -16,7 +16,6 @@ import org.wit.macrocount.helpers.write
 import timber.log.Timber
 import java.lang.reflect.Type
 import java.util.Random
-import org.wit.macrocount.models.currentUser
 
 const val JSON_FILE = "macrocounts.json"
 val gsonBuilder: Gson = GsonBuilder().setPrettyPrinting()
@@ -44,11 +43,8 @@ class MacroCountJSONStore(private val context: Context) : MacroCountStore {
     }
 
     override fun findByCurrentUser(): List<MacroCountModel> {
-        var userMacros = macroCounts.filter { m -> m.userId == currentUser.id }
-        return userMacros
+        return macroCounts.filter { m -> m.userId == currentUser.id }
     }
-
-
 
     override fun create(macroCount: MacroCountModel) {
         macroCount.id = generateRandomId()
