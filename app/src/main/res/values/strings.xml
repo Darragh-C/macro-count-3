@@ -28,6 +28,8 @@
 
     <string name="text_kg">kg</string>
     <string name="text_dob">DOB</string>
+    <string name="text_height">Height</string>
+    <string name="text_weight">Weight</string>
     <string name="text_gender">Gender</string>
     <string name="text_genderM">Male</string>
     <string name="text_genderF">Female</string>

@@ -10,7 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import org.wit.macrocount.R
 import org.wit.macrocount.databinding.ActivityProfileBinding
 import org.wit.macrocount.main.MainApp
+
 import org.wit.macrocount.models.UserModel
+import org.wit.macrocount.models.UserRepo
+
 import timber.log.Timber
 import timber.log.Timber.Forest.i
 import java.time.LocalDate
@@ -19,7 +22,10 @@ class UserProfileActivity : AppCompatActivity() {
 
     lateinit var app : MainApp
     private lateinit var binding: ActivityProfileBinding
-    var user = UserModel()
+    private lateinit var userRepo: UserRepo
+    private var user: UserModel? = null
+
+
     var signup = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,12 +38,26 @@ class UserProfileActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         app = application as MainApp
+        userRepo = UserRepo(applicationContext)
+
+
+        val currentUserId = userRepo.userId
+        if (currentUserId != null) {
+            user = app.users.findById(currentUserId.toLong())
+        }
+
+        Timber.i("on create user: $user")
 
         if (intent.hasExtra("user_signup")) {
             signup = true
-            user = intent.extras?.getParcelable("user_signup")!!
-            i("user intent received at profile activity: ${user}")
+            //user = intent.extras?.getParcelable("user_signup")!!
+            user!!.weight = "75"
+            user!!.height  = "150"
+            user!!.dob = "1/1/1990"
+            i("user intent received at profile activity: $user")
         }
+
+        //Gender radio buttons
 
         val radioGroup = findViewById<RadioGroup>(R.id.genderRadioGroup)
         var gender: String = ""
@@ -53,32 +73,52 @@ class UserProfileActivity : AppCompatActivity() {
             }
         }
 
+        val preSelectedRadio = when (user?.gender) {
+            "male" -> R.id.radioButtonOption1
+            "female" -> R.id.radioButtonOption2
+            else -> -1
+        }
+
+        radioGroup.check(preSelectedRadio)
+
+        // Height number picker
+
         val numberPickerHeight = findViewById<NumberPicker>(R.id.numberPickerHeight)
         numberPickerHeight.minValue = 0
         numberPickerHeight.maxValue = 250
-        numberPickerHeight.value = 150
+        numberPickerHeight.value = user?.height?.toInt()!!
+
         numberPickerHeight.setOnValueChangedListener{ picker, oldVal, newVal ->
             i("{newVal}")
-            user.height = newVal.toString()
+            user!!.height = newVal.toString()
         }
+
+        // Weight number picker
 
         val numberPickerWeight = findViewById<NumberPicker>(R.id.numberPickerWeight)
         numberPickerWeight.minValue = 0
         numberPickerWeight.maxValue = 150
-        numberPickerWeight.value = 75
+        numberPickerWeight.value = user!!.weight.toInt()
+
         numberPickerWeight.setOnValueChangedListener{ picker, oldVal, newVal ->
             i("{newVal}")
-            user.weight = newVal.toString()
+            user!!.weight = newVal.toString()
         }
 
         var day: String = ""
         var month: String = ""
         var year: String = ""
 
+        var presetDob = user!!.dob.split("/")
+        Timber.i("split dob: $presetDob")
+        Timber.i("split dob 0: $presetDob[0]")
+        Timber.i("split dob 1: $presetDob[1]")
+        Timber.i("split dob 2: $presetDob[2]")
+
         val numberPickerDay = findViewById<NumberPicker>(R.id.numberPickerDay)
         numberPickerDay.minValue = 1
         numberPickerDay.maxValue = 31
-        numberPickerDay.value = 1
+        numberPickerDay.value = presetDob[0].toInt()
         numberPickerDay.setOnValueChangedListener{ picker, oldVal, newVal ->
             i("{newVal}")
             day = newVal.toString()
@@ -87,7 +127,7 @@ class UserProfileActivity : AppCompatActivity() {
         val numberPickerMonth = findViewById<NumberPicker>(R.id.numberPickerMonth)
         numberPickerMonth.minValue = 1
         numberPickerMonth.maxValue = 12
-        numberPickerMonth.value = 1
+        numberPickerMonth.value = presetDob[1].toInt()
         numberPickerMonth.setOnValueChangedListener{ picker, oldVal, newVal ->
             i("{newVal}")
             month = newVal.toString()
@@ -96,24 +136,20 @@ class UserProfileActivity : AppCompatActivity() {
         val numberPickerYear = findViewById<NumberPicker>(R.id.numberPickerYear)
         numberPickerYear.minValue = 1920
         numberPickerYear.maxValue = LocalDate.now().year
-        numberPickerYear.value = 1990
+        numberPickerYear.value = presetDob[2].toInt()
         numberPickerYear.setOnValueChangedListener{ picker, oldVal, newVal ->
             i("{newVal}")
             year = newVal.toString()
         }
 
         binding.btnSave.setOnClickListener() {
-            user.name = binding.userName.text.toString()
-            user.gender = gender
-            user.dob = day.toString() + "/" + month.toString() + "/" + year.toString()
-
+            user!!.name = binding.userName.text.toString()
+            user!!.gender = gender
+            user!!.dob = day.toString() + "/" + month.toString() + "/" + year.toString()
 
             Timber.i("userProfile saved: $user")
-            app.users.update(user.copy())
-            Timber.i("Total userProfiles: ")
-            for (i in app.users.findAll().indices) {
-                Timber.i("userProfile[$i]:${app.users.findAll()[i]}")
-            }
+            app.users.update(user!!.copy())
+
             if (signup) {
                 val intent = Intent(this, MacroCountListActivity::class.java)
                 startActivity(intent)

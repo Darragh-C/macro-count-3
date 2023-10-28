@@ -10,6 +10,7 @@ import org.wit.macrocount.R
 import org.wit.macrocount.main.MainApp
 import org.wit.macrocount.databinding.ActivitySignUpBinding
 import org.wit.macrocount.models.UserModel
+import org.wit.macrocount.models.UserRepo
 import org.wit.macrocount.models.generateRandomId
 import timber.log.Timber
 
@@ -19,6 +20,8 @@ class SignupActivity: AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
 
     var user = UserModel()
+    private lateinit var userRepo: UserRepo
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +30,8 @@ class SignupActivity: AppCompatActivity() {
         setContentView(binding.root)
 
         app = application as MainApp
+
+        userRepo = UserRepo(applicationContext)
 
         Timber.i("Sign up started..")
 
@@ -57,6 +62,7 @@ class SignupActivity: AppCompatActivity() {
                 Timber.i("User added: $user.email")
                 user.id = generateRandomId()
                 app.users.create(user.copy())
+                userRepo.userId = user.id.toString()
 
                 Timber.i("user at sign up intent: $user")
 

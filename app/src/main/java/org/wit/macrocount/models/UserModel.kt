@@ -5,8 +5,8 @@ import kotlinx.parcelize.Parcelize
 data class UserModel (var id: Long = 0,
                       var name: String = "",
                       var gender: String = "",
-                      var weight: String = "",
-                      var height: String = "",
+                      var weight: String = "0",
+                      var height: String = "0",
                       var dob: String = "",
                       var email: String = "",
                       var password: String = "") : Parcelable

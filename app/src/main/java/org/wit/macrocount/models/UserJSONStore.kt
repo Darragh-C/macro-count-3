@@ -42,6 +42,7 @@ class UserJSONStore(private val context: Context): UserStore {
     }
 
     override fun findAll(): MutableList<UserModel> {
+        Timber.i("Finding all users")
         logAll()
         return users
     }
@@ -51,27 +52,32 @@ class UserJSONStore(private val context: Context): UserStore {
 //    }
 
     override fun create(user: UserModel) {
+        Timber.i("Creating user")
         users.add(user)
         serialize()
     }
 
     override fun logIn(user: UserModel): Boolean {
+        Timber.i("Logging in user: $user")
         var foundUser: UserModel? = users.find { u -> u.email == user.email}
-        if (foundUser != null && foundUser.email == user.email) {
-            currentUser = foundUser
-            return true
-        } else {
-            return false
-        }
+        return foundUser != null && foundUser.password == user.password
+    }
+
+    override fun findById(id: Long?): UserModel? {
+        Timber.i("Finding user by id: $id")
+        return users.find { u -> u.id == id }
     }
 
     override fun signUp(user: UserModel) {
+        Timber.i("Signing up user: $user")
         this.create(user)
+
         logIn(user)
     }
 
     override fun update(user: UserModel) {
         var foundUser: UserModel? = users.find { m -> m.id == user.id }
+        Timber.i("Updating user: $foundUser")
         if (foundUser != null) {
             foundUser.name = user.name
             foundUser.gender = user.gender
@@ -81,7 +87,7 @@ class UserJSONStore(private val context: Context): UserStore {
             foundUser.password = user.password
 
             serialize()
-
+            Timber.i("Updated user: $user")
             //logAll()
         }
     }
@@ -93,6 +99,16 @@ class UserJSONStore(private val context: Context): UserStore {
         }
         serialize()
     }
+
+//    override fun setCurrentUser(user: UserModel){
+//        Timber.i("Setting current user: $user")
+//        currentUser = user.copy()
+//    }
+//
+//    override fun getCurrentUser(): UserModel {
+//        Timber.i("Getting current user: $currentUser")
+//        return currentUser
+//    }
 
     private fun serialize() {
         val jsonString = userGsonBuilder.toJson(users, userListType)

@@ -20,11 +20,14 @@ class UserMemStore: UserStore {
     override fun logIn(user: UserModel): Boolean {
         var foundUser: UserModel? = users.find { u -> u.email == user.email}
         if (foundUser != null && foundUser.password == user.password) {
-            currentUser = foundUser
             return true
         } else {
             return false
         }
+    }
+
+    override fun findById(id: Long?): UserModel? {
+        return users.find { u -> u.id == id }
     }
 
     override fun update(user: UserModel) {
@@ -45,6 +48,14 @@ class UserMemStore: UserStore {
             users.remove(user)
         }
     }
+
+//    override fun setCurrentUser(user: UserModel){
+//        currentUser = user.copy()
+//    }
+//
+//    override fun getCurrentUser(): UserModel {
+//        return currentUser
+//    }
 
     fun logAll() {
         users.forEach{ i("${it}") }
