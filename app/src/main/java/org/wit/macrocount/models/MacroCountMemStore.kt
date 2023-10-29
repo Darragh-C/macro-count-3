@@ -64,6 +64,10 @@ class MacroCountMemStore: MacroCountStore {
         }
     }
 
+    override fun isUniqueTitle(title: String): Boolean {
+        return macroCounts.none { it.title == title }
+    }
+
     private fun logAll() {
         macroCounts.forEach{ i("$it")}
     }

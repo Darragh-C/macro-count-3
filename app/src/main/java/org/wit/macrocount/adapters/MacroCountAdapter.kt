@@ -39,7 +39,10 @@ class MacroCountAdapter constructor(private var macroCounts: List<MacroCountMode
 
         fun bind(macroCount: MacroCountModel, listener: MacroCountListener) {
             binding.macroCounterTitle.text = macroCount.title
-            binding.description.text = macroCount.description
+            binding.macroCountCalories.text = macroCount.calories + "Kj"
+            binding.macroCountProtein.text = "protein:" + macroCount.protein + "g"
+            binding.macroCountCarbs.text = "carbs:" + macroCount.carbs + "g"
+            binding.macroCountFat.text = "fat:" + macroCount.fat + "g"
 
             binding.liButtonDel.setOnClickListener {
                 listener.onMacroDeleteClick(macroCount)

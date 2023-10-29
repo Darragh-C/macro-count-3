@@ -96,6 +96,10 @@ class MacroCountJSONStore(private val context: Context) : MacroCountStore {
         }
     }
 
+    override fun isUniqueTitle(title: String): Boolean {
+        return macroCounts.none { it.title == title }
+    }
+
     private fun serialize() {
         val jsonString = gsonBuilder.toJson(macroCounts, listType)
         write(context, JSON_FILE, jsonString)

@@ -10,13 +10,15 @@ import org.wit.macrocount.R
 import org.wit.macrocount.adapters.MacroCountAdapter
 import org.wit.macrocount.databinding.ActivityMacrocountSearchBinding
 import org.wit.macrocount.main.MainApp
+import org.wit.macrocount.models.MacroCountModel
+import org.wit.macrocount.models.UserRepo
 import timber.log.Timber.Forest.i
 
 class MacroCountSearchActivity : AppCompatActivity() {
 
     private lateinit var app: MainApp
-    private lateinit var adapter: MacroCountAdapter
     private lateinit var binding: ActivityMacrocountSearchBinding
+    private lateinit var userRepo: UserRepo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +27,14 @@ class MacroCountSearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         app = application as MainApp
+        userRepo = UserRepo(applicationContext)
 
-        //val macros = arrayOf("Steak", "Chicken", "Salmon", "Tofu", "Pasta", "Broccoli", "Quinoa", "Eggs", "Spinach", "Brown Rice", "Pork", "Lentils", "Shrimp", "Avocado", "Cauliflower", "Turkey", "Sweet Potato", "Asparagus", "Beans", "Zucchini")
-        val macros = app.macroCounts.findAll()
+        val currentUserId = userRepo.userId
+        var macros: List<MacroCountModel> = emptyList()
+        if (currentUserId != null) {
+            macros = app.macroCounts.findByUserId(currentUserId.toLong())
+        }
+
         val macroTitles = macros.map { it.title }
 
         val macroListAdapter : ArrayAdapter<String> = ArrayAdapter(

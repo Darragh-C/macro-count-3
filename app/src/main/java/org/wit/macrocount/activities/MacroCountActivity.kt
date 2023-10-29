@@ -30,6 +30,8 @@ class MacroCountActivity : AppCompatActivity() {
     private lateinit var userRepo: UserRepo
     var macroCount = MacroCountModel()
     var editMacro = false
+    var copiedMacro = false
+
 
     //seekbar data value stores
     var calories: Int = 0
@@ -122,17 +124,12 @@ class MacroCountActivity : AppCompatActivity() {
             macroCount.carbs = carbs.toString()
             macroCount.fat = fat.toString()
 
-//            userRepo = UserRepo(applicationContext)
-//
-//            val currentUserId = userRepo.userId
-
             if (currentUserId != null) {
                 i("Before assignment: $macroCount")
                 i("currentUserId at macro add: $currentUserId")
                 macroCount.userId = currentUserId.toLong()
                 i("After assignment: $macroCount")
             }
-
 
             val validationChecks = listOf(
                 Pair(macroCount.title.isEmpty(), R.string.snackbar_macroCountTitle),

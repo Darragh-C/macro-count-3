@@ -8,5 +8,6 @@ interface MacroCountStore {
     fun index(macroCount: MacroCountModel): Int
     fun findByUserId(id: Long): List<MacroCountModel>
     fun findByTitle(title: String): MacroCountModel
+    fun isUniqueTitle(title: String): Boolean
 
 }
