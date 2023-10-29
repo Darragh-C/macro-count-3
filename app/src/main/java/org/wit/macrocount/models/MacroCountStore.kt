@@ -6,5 +6,5 @@ interface MacroCountStore {
     fun update(macroCount: MacroCountModel)
     fun delete(macroCount: MacroCountModel)
     fun index(macroCount: MacroCountModel): Int
-    fun findByCurrentUser(): List<MacroCountModel>
+    fun findByUserId(id: Long): List<MacroCountModel>
 }

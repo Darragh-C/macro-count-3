@@ -21,6 +21,7 @@ const val USER_JSON_FILE = "users.json"
 
 var currentUser = UserModel()
 
+
 val userGsonBuilder: Gson = GsonBuilder().setPrettyPrinting()
     .registerTypeAdapter(Uri::class.java, UriParser())
     .create()

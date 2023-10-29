@@ -13,8 +13,8 @@ class MacroCountMemStore: MacroCountStore {
     override fun findAll(): List<MacroCountModel> {
         return macroCounts
     }
-    override fun findByCurrentUser(): List<MacroCountModel> {
-        return macroCounts.filter { m -> m.userId == currentUser.id }
+    override fun findByUserId(id: Long): List<MacroCountModel> {
+        return macroCounts.filter { m -> m.userId == id }
     }
 
     override fun create(macroCount: MacroCountModel) {

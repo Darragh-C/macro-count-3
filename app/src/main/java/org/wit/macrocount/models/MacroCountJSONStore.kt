@@ -42,13 +42,12 @@ class MacroCountJSONStore(private val context: Context) : MacroCountStore {
         return macroCounts
     }
 
-    override fun findByCurrentUser(): List<MacroCountModel> {
-        return macroCounts.filter { m -> m.userId == currentUser.id }
+    override fun findByUserId(id: Long): List<MacroCountModel> {
+        return macroCounts.filter { m -> m.userId == id }
     }
 
     override fun create(macroCount: MacroCountModel) {
         macroCount.id = generateRandomId()
-        macroCount.userId = currentUser.id
         macroCounts.add(macroCount)
         serialize()
     }

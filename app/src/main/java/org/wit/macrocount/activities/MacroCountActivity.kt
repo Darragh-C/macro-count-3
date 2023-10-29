@@ -18,12 +18,14 @@ import org.wit.macrocount.models.MacroCountModel
 import timber.log.Timber.Forest.i
 import org.wit.macrocount.showImagePicker
 import com.squareup.picasso.Picasso
+import org.wit.macrocount.models.UserRepo
 
 class MacroCountActivity : AppCompatActivity() {
 
     lateinit var app : MainApp
     private lateinit var binding: ActivityMacrocountBinding
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var userRepo: UserRepo
     var macroCount = MacroCountModel()
     var editMacro = false
 
@@ -49,6 +51,9 @@ class MacroCountActivity : AppCompatActivity() {
         var protein: Int = 0
         var carbs: Int = 0
         var fat: Int = 0
+
+        userRepo = UserRepo(applicationContext)
+        val currentUserId = userRepo.userId
 
 
         if (intent.hasExtra("macrocount_edit")) {
@@ -108,6 +113,17 @@ class MacroCountActivity : AppCompatActivity() {
             macroCount.protein = protein.toString()
             macroCount.carbs = carbs.toString()
             macroCount.fat = fat.toString()
+
+//            userRepo = UserRepo(applicationContext)
+//
+//            val currentUserId = userRepo.userId
+
+            if (currentUserId != null) {
+                i("Before assignment: $macroCount")
+                i("currentUserId at macro add: $currentUserId")
+                macroCount.userId = currentUserId.toLong()
+                i("After assignment: $macroCount")
+            }
 
 
             val validationChecks = listOf(

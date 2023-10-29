@@ -14,6 +14,8 @@ import org.wit.macrocount.adapters.MacroCountListener
 import org.wit.macrocount.databinding.ActivityMacrocountListBinding
 import org.wit.macrocount.main.MainApp
 import org.wit.macrocount.models.MacroCountModel
+import org.wit.macrocount.models.UserModel
+import org.wit.macrocount.models.UserRepo
 import timber.log.Timber
 
 class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
@@ -21,6 +23,9 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
     private lateinit var app: MainApp
     private lateinit var binding: ActivityMacrocountListBinding
     private lateinit var adapter: MacroCountAdapter
+    private lateinit var userRepo: UserRepo
+    //private var currentUser: UserModel? = null
+    //private var currentUserId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +36,22 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
 
         app = application as MainApp
 
+        userRepo = UserRepo(applicationContext)
+
+        val currentUserId = userRepo.userId
+//        if (currentUserId != null) {
+//            currentUser = app.users.findById(currentUserId.toLong())
+//        }
+
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
 
-        adapter = MacroCountAdapter(app.macroCounts.findByCurrentUser(), this)
+        if (currentUserId != null) {
+            adapter = MacroCountAdapter(app.macroCounts.findByUserId(currentUserId.toLong()), this)
+        }
         binding.recyclerView.adapter = adapter
 
-        var currentUserMacros = app.macroCounts.findByCurrentUser()
+        var currentUserMacros = currentUserId?.let { app.macroCounts.findByUserId(it.toLong()) }
         Timber.i("findByCurrentUser() at onCreate: $currentUserMacros")
 
     }
@@ -52,8 +66,6 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
             R.id.item_add -> {
                 val launcherIntent = Intent(this, MacroCountActivity::class.java)
                 getResult.launch(launcherIntent)
-                var currentUserMacros = app.macroCounts.findByCurrentUser()
-                Timber.i("findByCurrentUser() at on item add: $currentUserMacros")
             }
         }
         when (item.itemId) {
@@ -69,9 +81,14 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
 
-                adapter.updateData(app.macroCounts.findByCurrentUser())
+                userRepo = UserRepo(applicationContext)
+                val currentUserId = userRepo.userId
 
-                adapter.notifyDataSetChanged()
+                if (currentUserId != null) {
+                    val newMacroCounts = app.macroCounts.findByUserId(currentUserId.toLong())
+                    adapter.updateData(newMacroCounts)
+                    adapter.notifyDataSetChanged()
+                }
 
             }
         }
@@ -83,16 +100,32 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
     }
 
     override fun onMacroDeleteClick(macroCount: MacroCountModel) {
-        Timber.i("deleting macroCount: $macroCount.title")
-        val position = app.macroCounts.index(macroCount)
-        app.macroCounts.delete(macroCount)
-        binding.recyclerView.adapter?.notifyItemRemoved(position)
+        val currentUserId = userRepo.userId
+
+        if (currentUserId != null) {
+            val userMacroCounts = app.macroCounts.findByUserId(currentUserId.toLong()).toMutableList()
+
+            val position = userMacroCounts.indexOfFirst { it.id == macroCount.id }
+
+            if (position != -1) {
+                userMacroCounts.removeAt(position)
+                app.macroCounts.delete(macroCount)
+                adapter.updateData(userMacroCounts)
+                adapter.notifyItemRemoved(position)
+            }
+        }
     }
 
     private val getClickResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                adapter.updateData(app.macroCounts.findByCurrentUser())
+                userRepo = UserRepo(applicationContext)
+
+                val currentUserId = userRepo.userId
+
+                if (currentUserId != null) {
+                    adapter.updateData(app.macroCounts.findByUserId(currentUserId.toLong()))
+                }
 
                 adapter.notifyDataSetChanged()
             }
