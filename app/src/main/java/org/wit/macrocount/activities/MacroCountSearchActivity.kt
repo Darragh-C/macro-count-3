@@ -9,7 +9,7 @@ import org.wit.macrocount.R
 import org.wit.macrocount.adapters.MacroCountAdapter
 import org.wit.macrocount.databinding.ActivityMacrocountSearchBinding
 import org.wit.macrocount.main.MainApp
-
+import timber.log.Timber.Forest.i
 
 class MacroCountSearchActivity : AppCompatActivity() {
 
@@ -23,20 +23,30 @@ class MacroCountSearchActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        val macros = arrayOf("Steak", "Chicken", "Salmon", "Tofu", "Pasta", "Broccoli", "Quinoa", "Eggs", "Spinach", "Brown Rice", "Pork", "Lentils", "Shrimp", "Avocado", "Cauliflower", "Turkey", "Sweet Potato", "Asparagus", "Beans", "Zucchini")
+        app = application as MainApp
+
+        //val macros = arrayOf("Steak", "Chicken", "Salmon", "Tofu", "Pasta", "Broccoli", "Quinoa", "Eggs", "Spinach", "Brown Rice", "Pork", "Lentils", "Shrimp", "Avocado", "Cauliflower", "Turkey", "Sweet Potato", "Asparagus", "Beans", "Zucchini")
+        val macros = app.macroCounts.findAll()
+        val macroTitles = macros.map { it.title }
 
         val macroListAdapter : ArrayAdapter<String> = ArrayAdapter(
             this, android.R.layout.simple_list_item_1,
-            macros
+            macroTitles
         )
 
         binding.macroSearchList.adapter = macroListAdapter
 
+        binding.macroSearchList.setOnItemClickListener { parent, view, position, id ->
+            val selectedItem = macroListAdapter.getItem(position)
+            i("selectedItem: $selectedItem")
+        }
+
         binding.macroSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 binding.macroSearchView.clearFocus()
-                if (macros.contains(query)) {
+                if (macroTitles.contains(query)) {
                     macroListAdapter.filter.filter(query)
+                    i("query: $query")
                 }
                 return false
             }
