@@ -1,6 +1,7 @@
 package org.wit.macrocount.activities
 import android.os.Bundle
 import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
@@ -39,6 +40,11 @@ class MacroCountSearchActivity : AppCompatActivity() {
         binding.macroSearchList.setOnItemClickListener { parent, view, position, id ->
             val selectedItem = macroListAdapter.getItem(position)
             i("selectedItem: $selectedItem")
+
+            val resultIntent = Intent()
+            resultIntent.putExtra("selectedItem", selectedItem )
+            setResult(RESULT_OK, resultIntent)
+            finish()
         }
 
         binding.macroSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

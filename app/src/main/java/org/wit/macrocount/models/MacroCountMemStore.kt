@@ -17,6 +17,17 @@ class MacroCountMemStore: MacroCountStore {
         return macroCounts.filter { m -> m.userId == id }
     }
 
+    override fun findByTitle(title: String): MacroCountModel {
+        val foundMacros = macroCounts.filter { m -> m.title == title }
+        if (foundMacros.isEmpty()) {
+            throw NoSuchElementException("No item with title $title found")
+        } else if (foundMacros.size > 1) {
+            throw IllegalStateException("Multiple items with title $title found")
+        }
+        return foundMacros[0]
+    }
+
+
     override fun create(macroCount: MacroCountModel) {
         macroCount.id = getId()
         macroCounts.add(macroCount)

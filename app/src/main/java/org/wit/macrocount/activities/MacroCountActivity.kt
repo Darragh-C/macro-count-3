@@ -31,6 +31,12 @@ class MacroCountActivity : AppCompatActivity() {
     var macroCount = MacroCountModel()
     var editMacro = false
 
+    //seekbar data value stores
+    var calories: Int = 0
+    var protein: Int = 0
+    var carbs: Int = 0
+    var fat: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,11 +54,11 @@ class MacroCountActivity : AppCompatActivity() {
         val seekBarMin = 0
         val seekBarMax = 500
 
-        //seekbar data value stores
-        var calories: Int = 0
-        var protein: Int = 0
-        var carbs: Int = 0
-        var fat: Int = 0
+//        //seekbar data value stores
+//        var calories: Int = 0
+//        var protein: Int = 0
+//        var carbs: Int = 0
+//        var fat: Int = 0
 
         userRepo = UserRepo(applicationContext)
         val currentUserId = userRepo.userId
@@ -246,7 +252,7 @@ class MacroCountActivity : AppCompatActivity() {
                             Picasso.get()
                                 .load(macroCount.image)
                                 .into(binding.macroCountImage)
-                        } // end of if
+                        }
                     }
                     RESULT_CANCELED -> { } else -> { }
                 }
@@ -256,8 +262,31 @@ class MacroCountActivity : AppCompatActivity() {
     private val getResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
+                val data = it.data
+                if (data != null) {
+                    val selectedItem = data.getStringExtra("selectedItem")
+                    if (selectedItem != null) {
+                        i("returned selectedItem: ${selectedItem}")
+                        val selectedMacro = app.macroCounts.findByTitle(selectedItem)
+                        i("returned selectedMacro: ${selectedMacro}")
+                        binding.macroCountTitle.setText(selectedMacro.title)
+                        binding.macroCountDescription.setText(selectedMacro.description)
+                        calories = selectedMacro.calories.toInt()
+                        protein = selectedMacro.protein.toInt()
+                        carbs = selectedMacro.carbs.toInt()
+                        fat = selectedMacro.fat.toInt()
 
-                i("search result")
+                        // Update SeekBar progresses and data views
+                        binding.calorieSeekBar.progress = calories
+                        binding.proteinSeekBar.progress = protein
+                        binding.carbsSeekBar.progress = carbs
+                        binding.fatSeekBar.progress = fat
+                        binding.caloriesDataView.text = calories.toString()
+                        binding.proteinDataView.text = protein.toString()
+                        binding.carbsDataView.text = carbs.toString()
+                        binding.fatDataView.text = fat.toString()
+                    }
+                }
 
             }
         }
