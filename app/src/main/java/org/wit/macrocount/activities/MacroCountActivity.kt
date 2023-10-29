@@ -1,5 +1,6 @@
 package org.wit.macrocount.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -19,6 +20,7 @@ import timber.log.Timber.Forest.i
 import org.wit.macrocount.showImagePicker
 import com.squareup.picasso.Picasso
 import org.wit.macrocount.models.UserRepo
+
 
 class MacroCountActivity : AppCompatActivity() {
 
@@ -224,6 +226,10 @@ class MacroCountActivity : AppCompatActivity() {
             R.id.item_cancel -> {
                 finish()
             }
+            R.id.item_search -> {
+                val launcherIntent = Intent(this, MacroCountSearchActivity::class.java)
+                getResult.launch(launcherIntent)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -246,4 +252,13 @@ class MacroCountActivity : AppCompatActivity() {
                 }
             }
     }
+
+    private val getResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+
+                i("search result")
+
+            }
+        }
 }

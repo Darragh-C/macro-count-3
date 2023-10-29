@@ -59,6 +59,12 @@
             </intent-filter>
 
         </activity>
+        <activity
+            android:name=".activities.MacroCountSearchActivity">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
 
     </application>
 </manifest>
