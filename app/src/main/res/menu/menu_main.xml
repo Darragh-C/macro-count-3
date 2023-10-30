@@ -8,9 +8,4 @@
         android:title="@string/menu_addMacroCount"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/item_profile"
-        android:icon="@drawable/ic_profile_icon"
-        android:title="@string/menu_addMacroCount"
-        app:showAsAction="always" />
 </menu>

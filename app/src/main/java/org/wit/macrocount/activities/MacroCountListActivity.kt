@@ -17,6 +17,7 @@ import org.wit.macrocount.models.MacroCountModel
 import org.wit.macrocount.models.UserModel
 import org.wit.macrocount.models.UserRepo
 import timber.log.Timber
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
 
@@ -39,9 +40,6 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
         userRepo = UserRepo(applicationContext)
 
         val currentUserId = userRepo.userId
-//        if (currentUserId != null) {
-//            currentUser = app.users.findById(currentUserId.toLong())
-//        }
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
@@ -54,6 +52,12 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
         var currentUserMacros = currentUserId?.let { app.macroCounts.findByUserId(it.toLong()) }
         Timber.i("findByCurrentUser() at onCreate: $currentUserMacros")
 
+        val fab: FloatingActionButton = findViewById(R.id.list_fab)
+
+        fab.setOnClickListener {
+            val launcherIntent = Intent(this, MacroCountActivity::class.java)
+            getResult.launch(launcherIntent)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -62,12 +66,6 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.item_add -> {
-                val launcherIntent = Intent(this, MacroCountActivity::class.java)
-                getResult.launch(launcherIntent)
-            }
-        }
         when (item.itemId) {
             R.id.item_profile -> {
                 val launcherIntent = Intent(this, UserProfileActivity::class.java)
