@@ -57,6 +57,30 @@ class UserProfileActivity : AppCompatActivity() {
             i("user intent received at profile activity: $user")
         }
 
+        //Weight goal radio buttons
+
+        val goalRadioGroup = findViewById<RadioGroup>(R.id.goalRadioGroup)
+        var weightGoal: String = ""
+
+        goalRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId) {
+                R.id.goalRadioButtonOption1 -> {
+                    weightGoal = "Lose"
+                }
+                R.id.goalRadioButtonOption2 -> {
+                    weightGoal = "Gain"
+                }
+            }
+        }
+
+        val preSelectedGoalRadio = when (user?.goal) {
+            "lose" -> R.id.goalRadioButtonOption1
+            "gain" -> R.id.goalRadioButtonOption2
+            else -> -1
+        }
+
+        goalRadioGroup.check(preSelectedGoalRadio)
+
         //Gender radio buttons
 
         val radioGroup = findViewById<RadioGroup>(R.id.genderRadioGroup)
@@ -80,6 +104,18 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         radioGroup.check(preSelectedRadio)
+
+        // Age number picker
+
+        val numberPickerAge = findViewById<NumberPicker>(R.id.numberPickerAge)
+        numberPickerAge.minValue = 0
+        numberPickerAge.maxValue = 250
+        numberPickerAge.value = user?.height?.toInt()!!
+
+        numberPickerAge.setOnValueChangedListener{ picker, oldVal, newVal ->
+            i("{newVal}")
+            user!!.age = newVal.toString()
+        }
 
         // Height number picker
 
@@ -144,6 +180,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         binding.btnSave.setOnClickListener() {
             user!!.name = binding.userName.text.toString()
+            user!!.goal = weightGoal
             user!!.gender = gender
             user!!.dob = day.toString() + "/" + month.toString() + "/" + year.toString()
 
