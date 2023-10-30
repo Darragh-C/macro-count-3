@@ -61,16 +61,14 @@
 
             <Button
                 android:id="@+id/btnLogin"
+                style="@style/CustomButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:background="@color/colorAccent"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:background="@drawable/rounded_button"
                 android:stateListAnimator="@null"
                 android:text="@string/button_login"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp" />
+                 />
 
             <TextView
                 android:id="@+id/signupLink"
