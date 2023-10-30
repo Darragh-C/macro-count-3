@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 data class UserModel (var id: Long = 0,
                       var name: String = "",
                       var gender: String = "",
+
                       var weight: String = "0",
                       var height: String = "0",
                       var dob: String = "",

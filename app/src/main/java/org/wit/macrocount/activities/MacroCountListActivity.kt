@@ -67,6 +67,12 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.data_icon -> {
+                val launcherIntent = Intent(this, MacroChartsActivity::class.java)
+                getResult.launch(launcherIntent)
+            }
+        }
+        when (item.itemId) {
             R.id.item_profile -> {
                 val launcherIntent = Intent(this, UserProfileActivity::class.java)
                 getResult.launch(launcherIntent)
