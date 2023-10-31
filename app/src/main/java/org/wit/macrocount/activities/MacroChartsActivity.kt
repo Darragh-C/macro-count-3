@@ -5,26 +5,31 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import org.wit.macrocount.R
+import org.wit.macrocount.databinding.ActivityChartsBinding
 import org.wit.macrocount.main.MainApp
 import org.wit.macrocount.models.UserModel
 import org.wit.macrocount.models.UserRepo
 import org.wit.macrocount.helpers.calcBmr
 import org.wit.macrocount.models.MacroCountModel
 import timber.log.Timber
+import kotlin.math.roundToInt
 
 class MacroChartsActivity : AppCompatActivity() {
     lateinit var app : MainApp
     private lateinit var caloriesProgressBar: ProgressBar
     private lateinit var userRepo: UserRepo
     private var user: UserModel? = null
-    private var calorieGoal: Double = 0.0
+    private var calorieGoal: Int = 0
     private var dailyCalories: Int = 0
     private var userMacros: List<MacroCountModel>? = null
-    private var caloriesProgress: Double = 0.0
+    private var caloriesProgress: Int = 0
+    private lateinit var binding: ActivityChartsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_charts)
+
+        binding = ActivityChartsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         app = application as MainApp
         userRepo = UserRepo(applicationContext)
@@ -38,6 +43,9 @@ class MacroChartsActivity : AppCompatActivity() {
 
         userMacros = app.macroCounts.findByUserId(user!!.id)
         Timber.i("userMacros: $userMacros")
+
+        var calorieFraction: String = ""
+        //var calorieFractionView = findViewById<>(R.id.caloriesProgressFraction)
 
         if (user != null && userMacros != null) {
             try {
@@ -54,14 +62,18 @@ class MacroChartsActivity : AppCompatActivity() {
 
             dailyCalories = userMacros!!.sumOf { it.calories.toInt() }
             Timber.i("dailyCalories: $dailyCalories")
-            caloriesProgress = (dailyCalories / calorieGoal) * (100 / 1)
-            Timber.i("userMacros: $caloriesProgress")
+
+            var calorieFraction = "$dailyCalories/$calorieGoal"
+            binding.caloriesProgressFraction.text = calorieFraction
+
+            caloriesProgress = ((dailyCalories.toDouble() / calorieGoal.toDouble()) * 100).roundToInt()
+            Timber.i("caloriesProgress: $caloriesProgress")
         }
 
 
-
-        caloriesProgressBar = findViewById(R.id.caloriesProgressBar)
-        caloriesProgressBar.progress = caloriesProgress.toInt()
+        caloriesProgressBar = binding.caloriesProgressBar
+        //caloriesProgressBar = findViewById(R.id.caloriesProgressBar)
+        caloriesProgressBar.progress = caloriesProgress
 
     }
 
