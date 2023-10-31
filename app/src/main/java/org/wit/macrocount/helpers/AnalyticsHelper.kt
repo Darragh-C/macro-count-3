@@ -21,4 +21,18 @@ fun calcBmr(weight: Int, height: Int, age: Int, goal: String): Int {
     }
 }
 
+fun calcProtein(weight: Int, goal: String): Int {
+    return when (goal) {
+        "Lose" -> {
+            (weight)
+        }
+        "Gain" -> {
+            (weight * 1.3).roundToInt()
+        }
+        else -> {
+            weight
+        }
+    }
+}
+
 
