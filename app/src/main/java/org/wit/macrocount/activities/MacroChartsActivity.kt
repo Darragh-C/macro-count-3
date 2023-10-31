@@ -30,15 +30,28 @@ class MacroChartsActivity : AppCompatActivity() {
         userRepo = UserRepo(applicationContext)
 
         val currentUserId = userRepo.userId
+        Timber.i("currentUserId at charts: $currentUserId")
         if (currentUserId != null) {
             user = app.users.findById(currentUserId.toLong())
         }
+        Timber.i("user at charts: $user")
+
+        userMacros = app.macroCounts.findByUserId(user!!.id)
+        Timber.i("userMacros: $userMacros")
 
         if (user != null && userMacros != null) {
-            calorieGoal = calcBmr(user!!.weight.toInt(), user!!.height.toInt(), user!!.age.toInt(), user!!.goal)
-            Timber.i("calorieGoal: $calorieGoal")
-            userMacros = app.macroCounts.findByUserId(user!!.id)
-            Timber.i("userMacros: $userMacros")
+            try {
+                calorieGoal = calcBmr(
+                    user!!.weight.toInt(),
+                    user!!.height.toInt(),
+                    user!!.age.toInt(),
+                    user!!.goal
+                )
+                Timber.i("calorieGoal: $calorieGoal")
+            } catch (e: NumberFormatException) {
+                Timber.e("Error converting a value to an integer: ${e.message}")
+            }
+
             dailyCalories = userMacros!!.sumOf { it.calories.toInt() }
             Timber.i("dailyCalories: $dailyCalories")
             caloriesProgress = (dailyCalories / calorieGoal) * (100 / 1)
