@@ -1,7 +1,10 @@
 package org.wit.macrocount.models
+import org.wit.macrocount.main.MainApp
 import timber.log.Timber.Forest.i
+import java.time.LocalDate
 
 var lastId = 0L
+
 
 internal fun getId(): Long {
     return lastId++
@@ -9,6 +12,8 @@ internal fun getId(): Long {
 class MacroCountMemStore: MacroCountStore {
 
     val macroCounts = ArrayList<MacroCountModel>()
+
+    private lateinit var app: MainApp
 
     override fun findAll(): List<MacroCountModel> {
         return macroCounts
@@ -31,6 +36,9 @@ class MacroCountMemStore: MacroCountStore {
     override fun create(macroCount: MacroCountModel) {
         macroCount.id = getId()
         macroCounts.add(macroCount)
+
+        app.days.addMacroId(macroCount.userId, macroCount.userId, LocalDate.now())
+
         logAll()
     }
 

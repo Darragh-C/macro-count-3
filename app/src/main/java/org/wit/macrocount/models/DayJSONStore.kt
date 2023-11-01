@@ -16,6 +16,7 @@ import org.wit.macrocount.helpers.exists
 import org.wit.macrocount.helpers.read
 import org.wit.macrocount.helpers.write
 import java.lang.reflect.Type
+import java.time.LocalDate
 
 
 private const val JSON_FILE = "days.json"
@@ -48,7 +49,27 @@ class DayJSONMemStore(private val context: Context) : DayStore {
         serialize()
     }
 
-    override fun update(day: DayModel) {
+    override fun addMacroId(macroId: Long, userId: Long, date: LocalDate) {
+        var dayModel = DayModel()
+        dayModel.userId = userId
+        dayModel.date = date
+
+        var foundDay: DayModel? = days.find { d -> d.date == date && d.userId == userId }
+
+        if (foundDay != null) {
+            var macroIds = foundDay.userMacroIds.toMutableList()
+            macroIds.add(macroId.toString())
+            dayModel.userMacroIds = macroIds
+
+            update(dayModel)
+
+        } else {
+            dayModel.userMacroIds = listOf(macroId.toString())
+            create(dayModel)
+        }
+    }
+
+    private fun update(day: DayModel) {
         val foundDay = days.find { it.date == day.date && it.userId == day.userId }
         foundDay?.let {
             it.userMacroIds = day.userMacroIds
