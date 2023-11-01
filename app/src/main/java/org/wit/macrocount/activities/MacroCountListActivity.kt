@@ -18,6 +18,7 @@ import org.wit.macrocount.models.UserModel
 import org.wit.macrocount.models.UserRepo
 import timber.log.Timber
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.time.LocalDate
 
 class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
 
@@ -25,6 +26,7 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
     private lateinit var binding: ActivityMacrocountListBinding
     private lateinit var adapter: MacroCountAdapter
     private lateinit var userRepo: UserRepo
+    //var userMacrosToday:
     //private var currentUser: UserModel? = null
     //private var currentUserId: String? = null
     //var search = false
@@ -44,13 +46,19 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
 
-        if (currentUserId != null) {
-            adapter = MacroCountAdapter(app.macroCounts.findByUserId(currentUserId.toLong()), this)
-        }
+        val userToday = app.days.findByUserDate(currentUserId!!.toLong(), LocalDate.now())
+        val userTodayMacros = userToday?.userMacroIds?.mapNotNull { app.macroCounts.findById(it.toLong()) }
+
+        val userTodayMacrosList = userTodayMacros?.toMutableList() ?: mutableListOf()
+
+        Timber.i("userTodayMacros onCreate: $userTodayMacrosList")
+
+        adapter = MacroCountAdapter(userTodayMacrosList, this)
+
         binding.recyclerView.adapter = adapter
 
-        var currentUserMacros = currentUserId?.let { app.macroCounts.findByUserId(it.toLong()) }
-        Timber.i("findByCurrentUser() at onCreate: $currentUserMacros")
+//        var currentUserMacros = currentUserId?.let { app.macroCounts.findByUserId(it.toLong()) }
+//        Timber.i("findByCurrentUser() at onCreate: $currentUserMacros")
 
         val fab: FloatingActionButton = findViewById(R.id.list_fab)
 

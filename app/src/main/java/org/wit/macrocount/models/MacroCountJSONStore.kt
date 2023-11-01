@@ -52,6 +52,10 @@ class MacroCountJSONStore(private val context: Context) : MacroCountStore {
         return macroCounts.filter { m -> m.userId == id }
     }
 
+    override fun findById(id: Long): MacroCountModel? {
+        return macroCounts.find { m -> m.id == id }
+    }
+
     override fun findByTitle(title: String): MacroCountModel {
         val foundMacros = macroCounts.filter { m -> m.title == title }
         if (foundMacros.isEmpty()) {

@@ -15,8 +15,8 @@ class DayMemStore: DayStore {
         return days.filter { d -> d.userId == id }
     }
 
-    override fun findByUserDate(id: Long, date: LocalDate): List<DayModel> {
-        return days.filter { d -> d.userId == id && d.date == date }
+    override fun findByUserDate(id: Long, date: LocalDate): DayModel? {
+        return days.find { d -> d.userId == id && d.date == date }
     }
 
     override fun create(day: DayModel) {

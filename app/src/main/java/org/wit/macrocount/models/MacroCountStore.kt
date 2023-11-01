@@ -7,6 +7,7 @@ interface MacroCountStore {
     fun delete(macroCount: MacroCountModel)
     fun index(macroCount: MacroCountModel): Int
     fun findByUserId(id: Long): List<MacroCountModel>
+    fun findById(id: Long): MacroCountModel?
     fun findByTitle(title: String): MacroCountModel
     fun isUniqueTitle(title: String): Boolean
 
