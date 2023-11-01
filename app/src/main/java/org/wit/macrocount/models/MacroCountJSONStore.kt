@@ -17,11 +17,11 @@ import timber.log.Timber
 import java.lang.reflect.Type
 import java.util.Random
 
-const val JSON_FILE = "macrocounts.json"
-val gsonBuilder: Gson = GsonBuilder().setPrettyPrinting()
+private const val JSON_FILE = "macrocounts.json"
+private val gsonBuilder: Gson = GsonBuilder().setPrettyPrinting()
     .registerTypeAdapter(Uri::class.java, UriParser())
     .create()
-val listType: Type = object : TypeToken<ArrayList<MacroCountModel>>() {}.type
+private val listType: Type = object : TypeToken<ArrayList<MacroCountModel>>() {}.type
 
 fun generateRandomId(): Long {
     return Random().nextLong()
