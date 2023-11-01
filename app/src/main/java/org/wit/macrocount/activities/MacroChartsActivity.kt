@@ -95,15 +95,17 @@ class MacroChartsActivity : AppCompatActivity() {
         proteinProgressBar = binding.proteinProgressBar
         proteinProgressBar.progress = proteinProgress
 
+        //pie chart
+
         pieChart = binding.macroPieChart
 
-        val list: ArrayList<PieEntry> = ArrayList()
+        val macroTotals: ArrayList<PieEntry> = ArrayList()
 
-        list.add(PieEntry(100f, "100"))
-        list.add(PieEntry(101f, "101"))
-        list.add(PieEntry(102f, "102"))
+        macroTotals.add(PieEntry((userMacros!!.sumOf { it.protein.toInt() }).toFloat(), "Protein"))
+        macroTotals.add(PieEntry((userMacros!!.sumOf { it.carbs.toInt() }).toFloat(), "Carbs"))
+        macroTotals.add(PieEntry((userMacros!!.sumOf { it.fat.toInt() }).toFloat(), "Fat"))
 
-        val pieDataSet = PieDataSet(list, "List")
+        val pieDataSet = PieDataSet(macroTotals, "Macro proportions")
 
         pieDataSet.setColors(ColorTemplate.MATERIAL_COLORS, 255)
 
@@ -115,7 +117,7 @@ class MacroChartsActivity : AppCompatActivity() {
 
         pieChart.data = pieData
 
-        pieChart.centerText = "List"
+        pieChart.centerText = "Macro proportions"
 
         pieChart.animateY(2000)
 
