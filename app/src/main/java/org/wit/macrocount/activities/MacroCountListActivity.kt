@@ -27,6 +27,7 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
     private lateinit var userRepo: UserRepo
     //private var currentUser: UserModel? = null
     //private var currentUserId: String? = null
+    //var search = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +39,6 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
         app = application as MainApp
 
         userRepo = UserRepo(applicationContext)
-
         val currentUserId = userRepo.userId
 
         val layoutManager = LinearLayoutManager(this)

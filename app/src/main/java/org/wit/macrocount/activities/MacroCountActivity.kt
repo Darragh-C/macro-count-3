@@ -31,6 +31,7 @@ class MacroCountActivity : AppCompatActivity() {
     var macroCount = MacroCountModel()
     var editMacro = false
     var copiedMacro = false
+    var currentUserId: Long = 0
 
 
     //seekbar data value stores
@@ -63,7 +64,7 @@ class MacroCountActivity : AppCompatActivity() {
 //        var fat: Int = 0
 
         userRepo = UserRepo(applicationContext)
-        val currentUserId = userRepo.userId
+        currentUserId = userRepo.userId!!.toLong()
 
 
         if (intent.hasExtra("macrocount_edit")) {
@@ -231,6 +232,7 @@ class MacroCountActivity : AppCompatActivity() {
             }
             R.id.item_search -> {
                 val launcherIntent = Intent(this, MacroCountSearchActivity::class.java)
+                launcherIntent.putExtra("search", intent)
                 getResult.launch(launcherIntent)
             }
         }
@@ -261,17 +263,17 @@ class MacroCountActivity : AppCompatActivity() {
             if (it.resultCode == Activity.RESULT_OK) {
                 val data = it.data
                 if (data != null) {
-                    val selectedItem = data.getStringExtra("selectedItem")
+                    val selectedItem = data.getParcelableExtra<MacroCountModel>("macrocount_copy")
                     if (selectedItem != null) {
                         i("returned selectedItem: ${selectedItem}")
-                        val selectedMacro = app.macroCounts.findByTitle(selectedItem)
-                        i("returned selectedMacro: ${selectedMacro}")
-                        binding.macroCountTitle.setText(selectedMacro.title)
-                        binding.macroCountDescription.setText(selectedMacro.description)
-                        calories = selectedMacro.calories.toInt()
-                        protein = selectedMacro.protein.toInt()
-                        carbs = selectedMacro.carbs.toInt()
-                        fat = selectedMacro.fat.toInt()
+
+
+                        binding.macroCountTitle.setText(selectedItem.title)
+                        binding.macroCountDescription.setText(selectedItem.description)
+                        calories = selectedItem.calories.toInt()
+                        protein = selectedItem.protein.toInt()
+                        carbs = selectedItem.carbs.toInt()
+                        fat = selectedItem.fat.toInt()
 
                         // Update SeekBar progresses and data views
                         binding.calorieSeekBar.progress = calories

@@ -74,8 +74,8 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         val preSelectedGoalRadio = when (user?.goal) {
-            "lose" -> R.id.goalRadioButtonOption1
-            "gain" -> R.id.goalRadioButtonOption2
+            "Lose" -> R.id.goalRadioButtonOption1
+            "Gain" -> R.id.goalRadioButtonOption2
             else -> -1
         }
 

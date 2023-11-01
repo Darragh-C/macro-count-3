@@ -1,12 +1,13 @@
 package org.wit.macrocount.activities
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ProgressBar
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -43,6 +44,9 @@ class MacroChartsActivity : AppCompatActivity() {
 
         binding = ActivityChartsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.toolbar.title = "Macro data"
+        setSupportActionBar(binding.toolbar)
 
         app = application as MainApp
         userRepo = UserRepo(applicationContext)
@@ -122,6 +126,24 @@ class MacroChartsActivity : AppCompatActivity() {
         pieChart.animateY(2000)
 
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        Timber.i("Rendering menu")
+        menuInflater.inflate(R.menu.menu_macrocount, menu)
+        val searchItem = menu.findItem(R.id.item_search)
+        searchItem.isVisible = false
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Timber.i("Rendering menu item")
+        when (item.itemId) {
+            R.id.item_cancel -> {
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 
