@@ -32,7 +32,9 @@ fun generateRandomId(): Long {
 class MacroCountJSONStore(private val context: Context) : MacroCountStore {
 
     var macroCounts = mutableListOf<MacroCountModel>()
-    private lateinit var app: MainApp
+    private val app: MainApp by lazy {
+        context.applicationContext as MainApp
+    }
 
 
     init {

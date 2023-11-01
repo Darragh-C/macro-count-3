@@ -25,7 +25,7 @@ private val gsonBuilder: Gson = GsonBuilder().setPrettyPrinting()
     .create()
 private val listType: Type = object : TypeToken<ArrayList<DayModel>>() {}.type
 
-class DayJSONMemStore(private val context: Context) : DayStore {
+class DayJSONStore(private val context: Context) : DayStore {
 
     var days = mutableListOf<DayModel>()
 
@@ -42,6 +42,10 @@ class DayJSONMemStore(private val context: Context) : DayStore {
 
     override fun findByUserId(id: Long): List<DayModel> {
         return days.filter { day -> day.userId == id }
+    }
+
+    override fun findByUserDate(id: Long, date: LocalDate): List<DayModel> {
+        return days.filter { d -> d.userId == id && d.date == date }
     }
 
     override fun create(day: DayModel) {

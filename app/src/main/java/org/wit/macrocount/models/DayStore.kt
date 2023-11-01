@@ -8,5 +8,5 @@ interface DayStore {
     fun findByUserId(id: Long): List<DayModel>
     fun create(day: DayModel)
     fun addMacroId(macroId: Long, userId: Long, date: LocalDate)
-
+    fun findByUserDate(id: Long, date: LocalDate): List<DayModel>
 }

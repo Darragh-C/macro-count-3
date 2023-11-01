@@ -130,7 +130,7 @@ class MacroCountActivity : AppCompatActivity() {
             if (currentUserId != null) {
                 i("Before assignment: $macroCount")
                 i("currentUserId at macro add: $currentUserId")
-                macroCount.userId = currentUserId.toLong()
+                macroCount.userId = currentUserId
                 i("After assignment: $macroCount")
             }
 
@@ -152,20 +152,25 @@ class MacroCountActivity : AppCompatActivity() {
 
             if (!validationFailed) {
                 if (editMacro) {
-                    i("macroCount saved: $macroCount.title")
+                    i("macroCount edited and saved: $macroCount")
                     app.macroCounts.update(macroCount.copy())
                 } else if (copyMacro) {
+                    i("copiedMacro: $copiedMacro")
+                    i("macroCount after copy: $macroCount")
                     if (copiedMacro.equals(macroCount)) {
                         app.days.addMacroId(macroCount.id, macroCount.userId, LocalDate.now())
+                        i("copied macroCount added to today: $macroCount")
                     } else {
                         app.macroCounts.create(macroCount.copy())
+                        i("creating new macroCount from copied and edited macro: $macroCount")
                     }
-                    //if unchanged, simply add the macroId to the user's date
-                    //if changed, create a new macro
                 } else {
                     app.macroCounts.create(macroCount.copy())
                     i("macroCount added: $macroCount")
                 }
+                i("All user macros: ${app.macroCounts.findByUserId(currentUserId)}")
+                i("LocalDate.now(): ${LocalDate.now()}")
+                i("Today's macros: ${app.days.findByUserDate(currentUserId, LocalDate.now())}")
 
                 setResult(RESULT_OK)
                 finish()
@@ -277,6 +282,9 @@ class MacroCountActivity : AppCompatActivity() {
                     if (selectedItem != null) {
                         i("returned selectedItem: ${selectedItem}")
 
+                        copyMacro = true
+
+                        macroCount.id = selectedItem.id
 
                         binding.macroCountTitle.setText(selectedItem.title)
                         binding.macroCountDescription.setText(selectedItem.description)
@@ -294,6 +302,8 @@ class MacroCountActivity : AppCompatActivity() {
                         binding.proteinDataView.text = protein.toString()
                         binding.carbsDataView.text = carbs.toString()
                         binding.fatDataView.text = fat.toString()
+
+                        copiedMacro = selectedItem.copy()
                     }
                 }
 
