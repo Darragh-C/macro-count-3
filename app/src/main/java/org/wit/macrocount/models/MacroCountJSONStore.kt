@@ -13,8 +13,10 @@ import com.google.gson.reflect.TypeToken
 import org.wit.macrocount.helpers.exists
 import org.wit.macrocount.helpers.read
 import org.wit.macrocount.helpers.write
+import org.wit.macrocount.main.MainApp
 import timber.log.Timber
 import java.lang.reflect.Type
+import java.time.LocalDate
 import java.util.Random
 
 private const val JSON_FILE = "macrocounts.json"
@@ -30,6 +32,8 @@ fun generateRandomId(): Long {
 class MacroCountJSONStore(private val context: Context) : MacroCountStore {
 
     var macroCounts = mutableListOf<MacroCountModel>()
+    private lateinit var app: MainApp
+
 
     init {
         if (exists(context, JSON_FILE)) {
@@ -60,6 +64,8 @@ class MacroCountJSONStore(private val context: Context) : MacroCountStore {
         macroCount.id = generateRandomId()
         macroCounts.add(macroCount)
         serialize()
+
+        app.days.addMacroId(macroCount.id, macroCount.userId, LocalDate.now())
     }
 
     override fun update(macroCount: MacroCountModel) {

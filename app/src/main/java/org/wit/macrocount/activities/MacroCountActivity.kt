@@ -20,6 +20,7 @@ import timber.log.Timber.Forest.i
 import org.wit.macrocount.showImagePicker
 import com.squareup.picasso.Picasso
 import org.wit.macrocount.models.UserRepo
+import java.time.LocalDate
 
 
 class MacroCountActivity : AppCompatActivity() {
@@ -30,8 +31,9 @@ class MacroCountActivity : AppCompatActivity() {
     private lateinit var userRepo: UserRepo
     var macroCount = MacroCountModel()
     var editMacro = false
-    var copiedMacro = false
+    var copyMacro = false
     var currentUserId: Long = 0
+    var copiedMacro = MacroCountModel()
 
 
     //seekbar data value stores
@@ -152,6 +154,14 @@ class MacroCountActivity : AppCompatActivity() {
                 if (editMacro) {
                     i("macroCount saved: $macroCount.title")
                     app.macroCounts.update(macroCount.copy())
+                } else if (copyMacro) {
+                    if (copiedMacro.equals(macroCount)) {
+                        app.days.addMacroId(macroCount.id, macroCount.userId, LocalDate.now())
+                    } else {
+                        app.macroCounts.create(macroCount.copy())
+                    }
+                    //if unchanged, simply add the macroId to the user's date
+                    //if changed, create a new macro
                 } else {
                     app.macroCounts.create(macroCount.copy())
                     i("macroCount added: $macroCount")

@@ -37,7 +37,7 @@ class MacroCountMemStore: MacroCountStore {
         macroCount.id = getId()
         macroCounts.add(macroCount)
 
-        app.days.addMacroId(macroCount.userId, macroCount.userId, LocalDate.now())
+        app.days.addMacroId(macroCount.id, macroCount.userId, LocalDate.now())
 
         logAll()
     }
