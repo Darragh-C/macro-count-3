@@ -70,8 +70,9 @@ class MacroCountJSONStore(private val context: Context) : MacroCountStore {
         macroCount.id = generateRandomId()
         macroCounts.add(macroCount)
         serialize()
-
-        app.days.addMacroId(macroCount.id, macroCount.userId, LocalDate.now())
+        val today = LocalDate.now()
+        app.days.addMacroId(macroCount.id, macroCount.userId, today)
+        Timber.i("Created date on $today")
     }
 
     override fun update(macroCount: MacroCountModel) {
@@ -84,6 +85,7 @@ class MacroCountJSONStore(private val context: Context) : MacroCountStore {
             foundMacroCount.protein = macroCount.protein
             foundMacroCount.fat = macroCount.fat
             foundMacroCount.userId = macroCount.userId
+            foundMacroCount.image = macroCount.image
 
             serialize()
 

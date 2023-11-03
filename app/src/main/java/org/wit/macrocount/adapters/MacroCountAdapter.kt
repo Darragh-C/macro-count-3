@@ -10,8 +10,8 @@ interface MacroCountListener{
     fun onMacroCountClick(macroCount: MacroCountModel)
     fun onMacroDeleteClick(macroCount: MacroCountModel)
 }
-class MacroCountAdapter constructor(private var macroCounts: List<MacroCountModel>,
-                                    private val listener: MacroCountListener
+class MacroCountAdapter(private var macroCounts: List<MacroCountModel?>,
+                        private val listener: MacroCountListener
 ):
 
     RecyclerView.Adapter<MacroCountAdapter.MainHolder>() {
@@ -24,7 +24,9 @@ class MacroCountAdapter constructor(private var macroCounts: List<MacroCountMode
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val macroCount = macroCounts[holder.adapterPosition]
-        holder.bind(macroCount, listener)
+        if (macroCount != null) {
+            holder.bind(macroCount, listener)
+        }
     }
 
     override fun getItemCount(): Int = macroCounts.size

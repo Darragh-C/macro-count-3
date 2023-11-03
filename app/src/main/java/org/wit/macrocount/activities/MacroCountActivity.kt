@@ -2,6 +2,7 @@ package org.wit.macrocount.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -21,7 +22,7 @@ import org.wit.macrocount.showImagePicker
 import com.squareup.picasso.Picasso
 import org.wit.macrocount.models.UserRepo
 import java.time.LocalDate
-
+import java.net.URI
 
 class MacroCountActivity : AppCompatActivity() {
 
@@ -81,6 +82,11 @@ class MacroCountActivity : AppCompatActivity() {
             fat = initData(macroCount.fat).toInt()
 
             binding.btnAdd.setText(R.string.save_macroCount)
+
+            Picasso.get()
+                .load(macroCount.image)
+                .into(binding.macroCountImage)
+
         }
 
         //seekbar viewers
@@ -261,7 +267,8 @@ class MacroCountActivity : AppCompatActivity() {
                 when(result.resultCode){
                     RESULT_OK -> {
                         if (result.data != null) {
-                            i("Got Result ${result.data!!.data}")
+                            i("Got Result uri ${result.data!!.data}")
+                                    i("Got Result decoded uri ${decodeUri(result.data!!.data)}")
                             macroCount.image = result.data!!.data!!
                             Picasso.get()
                                 .load(macroCount.image)
@@ -309,4 +316,14 @@ class MacroCountActivity : AppCompatActivity() {
 
             }
         }
+
+    fun decodeUri(encodedUri: Uri?): Uri {
+        try {
+            val decodedUriString = Uri.decode(encodedUri.toString())
+            return Uri.parse(decodedUriString)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return Uri.EMPTY
+    }
 }

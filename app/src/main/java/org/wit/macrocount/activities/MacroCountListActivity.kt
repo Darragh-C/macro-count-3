@@ -14,7 +14,6 @@ import org.wit.macrocount.adapters.MacroCountListener
 import org.wit.macrocount.databinding.ActivityMacrocountListBinding
 import org.wit.macrocount.main.MainApp
 import org.wit.macrocount.models.MacroCountModel
-import org.wit.macrocount.models.UserModel
 import org.wit.macrocount.models.UserRepo
 import timber.log.Timber
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -45,15 +44,29 @@ class MacroCountListActivity : AppCompatActivity(), MacroCountListener {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
+        val today = LocalDate.now()
+        Timber.i("Checking if logged in user $currentUserId has added macros today on $today")
+        val userToday = app.days.findByUserDate(currentUserId!!.toLong(), today)
+        Timber.i("User's day object: $userToday")
 
-        val userToday = app.days.findByUserDate(currentUserId!!.toLong(), LocalDate.now())
+        val usersDailyMacroList = userToday?.userMacroIds
+
+        var usersDailyMacroObjList = mutableListOf<MacroCountModel?>()
+
+        if (!usersDailyMacroList.isNullOrEmpty()) {
+            usersDailyMacroList.forEach { it -> usersDailyMacroObjList.add(app.macroCounts.findById(it.toLong())) }
+            Timber.i("user's daily macro object list: $usersDailyMacroObjList")
+        }
+
+
         val userTodayMacros = userToday?.userMacroIds?.mapNotNull { app.macroCounts.findById(it.toLong()) }
+        Timber.i("User's day object: $userToday")
 
-        val userTodayMacrosList = userTodayMacros?.toMutableList() ?: mutableListOf()
+        val adapterMacroList = usersDailyMacroObjList.toList()
 
-        Timber.i("userTodayMacros onCreate: $userTodayMacrosList")
+        Timber.i("userTodayMacros onCreate: $adapterMacroList")
 
-        adapter = MacroCountAdapter(userTodayMacrosList, this)
+        adapter = MacroCountAdapter(adapterMacroList, this)
 
         binding.recyclerView.adapter = adapter
 
