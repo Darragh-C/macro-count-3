@@ -77,13 +77,28 @@ class DayJSONStore(private val context: Context) : DayStore {
         }
     }
 
-    private fun update(day: DayModel) {
+    override fun update(day: DayModel) {
         val foundDay = days.find { it.date == day.date && it.userId == day.userId }
         foundDay?.let {
             Timber.i("foundDay and updating: $foundDay")
             it.userMacroIds = day.userMacroIds
             serialize()
 
+        }
+    }
+
+    override fun removeMacro(userId: Long, date: String, macroId: String) {
+        val foundDay = days.find { it.date == date && it.userId == userId }
+        if (foundDay != null) {
+            val foundDayMacros = foundDay.userMacroIds
+            val index = foundDayMacros.indexOf(macroId)
+            val filteredList = if (index != -1) {
+                foundDayMacros.filterIndexed { i, _ -> i != index }
+            } else {
+                foundDayMacros
+            }
+            foundDay.userMacroIds = filteredList
+            serialize()
         }
     }
 

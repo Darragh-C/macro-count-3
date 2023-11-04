@@ -44,7 +44,16 @@ class DayMemStore: DayStore {
         }
     }
 
-    private fun update(day: DayModel) {
+    override fun removeMacro(userId: Long, date: String, macroId: String) {
+        val foundDay = days.find { it.date == date && it.userId == userId }
+        if (foundDay != null) {
+            val foundDayMacros = foundDay.userMacroIds
+            val filteredList = foundDayMacros.filter { it != macroId }
+            foundDay.userMacroIds = filteredList
+        }
+    }
+
+    override fun update(day: DayModel) {
         var foundDay: DayModel? = days.find { d -> d.date == day.date && d.userId == day.userId }
         if (foundDay != null) {
             foundDay = day
